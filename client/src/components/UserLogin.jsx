@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import img1 from "../../src/img/userProfile.png";
+import { getUser } from "../redux/userAction";
 const UserLogin = () => {
   const user = useSelector((state) => state.counter.user);
 
@@ -9,6 +10,11 @@ const UserLogin = () => {
   const navigate = useNavigate();
   function handleClick() {
     navigate("/login");
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    navigate("/updateProfile");
   }
 
   return (
@@ -50,9 +56,9 @@ const UserLogin = () => {
           <p class="card-text">{user.lastName}</p>
           <p class="card-text">{user.email}</p>
 
-          <a href="/updateProfile" className="btn btn-primary">
+          <button className="btn btn-primary" onClick={handleSubmit}>
             Update User Information
-          </a>
+          </button>
         </div>
       </div>
     </>

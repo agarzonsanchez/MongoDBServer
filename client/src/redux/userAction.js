@@ -2,6 +2,7 @@ import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const getUser = createAsyncThunk("users/getUser", async (id) => {
+  console.log(id);
   try {
     const response = await axios.get(`http://localhost:3001/subscribers/${id}`);
 
@@ -47,10 +48,9 @@ export const login = createAsyncThunk("user/login", async (user) => {
 });
 
 export const updateUser = createAsyncThunk("user/updateUser", async (user) => {
-  console.log(user);
   try {
     const response = await axios.patch(
-      `http://localhost:3001/subscribers/${user.data._id}`,
+      `http://localhost:3001/subscribers/${user.data.id}`,
       user,
       {
         headers: {

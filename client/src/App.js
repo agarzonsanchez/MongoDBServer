@@ -21,9 +21,16 @@ function App() {
             </PrivateRoutes>
           }
         ></Route>
+        <Route
+          path="/updateProfile"
+          element={
+            <PrivateRoutes>
+              <UpdateProfile />
+            </PrivateRoutes>
+          }
+        ></Route>
 
         <Route path="/Login" element={<Login />}></Route>
-        <Route path="/updateProfile" element={<UpdateProfile />}></Route>
       </Routes>
     </div>
   );

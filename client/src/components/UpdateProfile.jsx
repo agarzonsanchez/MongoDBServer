@@ -19,7 +19,9 @@ const UpdateProfile = () => {
 
     await dispatch(updateUser({ ...input, data: { id: user._id } }));
     setInput({});
-    await getUser(user._id);
+    console.log(user._id);
+    await dispatch(getUser(user._id));
+
     navigate("/dashboard");
     e.target.reset();
   }
