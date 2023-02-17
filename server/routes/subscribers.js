@@ -1,4 +1,6 @@
+require("dotenv").config();
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 const Subscriber = require("../models/subscriber");
 const bcrypt = require("bcrypt");
@@ -6,7 +8,7 @@ const saltRounds = 10;
 
 //Getting all
 
-router.get("/", async (req, res) => {
+router.get("/", authenticateToken, async (req, res) => {
   //   res.send("hello world");
 
   try {
@@ -27,6 +29,7 @@ router.post("/login", async (req, res) => {
     const findSubscriber = await Subscriber.findOne({
       email: req.body.email,
     });
+
     if (findSubscriber === null) {
       return res.json({ message: "Email wasn't found" });
     }
@@ -38,6 +41,13 @@ router.post("/login", async (req, res) => {
     if (!unhashPass) {
       return res.json({ message: "Password incorrect. Try again" });
     } else {
+      /// JSON WEB TOKEN LOGIN
+
+      const accessToken = await jwt.sign(
+        { email: findSubscriber.email },
+        `${process.env.ACCESS_TOKEN_SECRET}`
+      );
+      console.log(accessToken);
       res.json(findSubscriber);
     }
   } catch (err) {
@@ -72,7 +82,6 @@ router.post("/subscribe", async (req, res) => {
 //Updating one
 router.patch("/:id", getSubscriber, async (req, res) => {
   const { id } = req.params;
-  console.log(id);
   if (req.body.firstName != null) {
     res.subscriber.firstName = req.body.firstName;
   }
@@ -103,6 +112,23 @@ router.delete("/:id", getSubscriber, async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+///// MIDDLEWARES
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  console.log(token);
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`, (err, user) => {
+    console.log(user);
+    if (err) return res.sendStatus(403);
+    console.log(user);
+    //req.email = email;
+    next();
+  });
+}
 
 async function getSubscriber(req, res, next) {
   let subscriber;
