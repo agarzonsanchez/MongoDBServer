@@ -13,6 +13,7 @@ router.get("/", authenticateToken, async (req, res) => {
 
   try {
     const subscriber = await Subscriber.find();
+    console.log(subscriber);
     res.send(subscriber);
   } catch (err) {
     res.status(500).json({ message: err.message });
