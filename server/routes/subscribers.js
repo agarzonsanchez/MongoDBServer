@@ -80,6 +80,20 @@ router.post("/subscribe", async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
+
+// Posting Comments
+router.patch("/comments/:id", getSubscriber, async (req, res) => {
+  if (req.body.comments != null) {
+    res.subscriber.comments.push(req.body.comments);
+  }
+
+  try {
+    const updatedSubscriber = await res.subscriber.save();
+    res.json(updatedSubscriber);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
 //Updating one
 router.patch("/:id", getSubscriber, async (req, res) => {
   const { id } = req.params;
@@ -104,7 +118,7 @@ router.patch("/:id", getSubscriber, async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
-//Deleteing one
+//Deleting one
 router.delete("/:id", getSubscriber, async (req, res) => {
   try {
     await res.subscriber.remove();

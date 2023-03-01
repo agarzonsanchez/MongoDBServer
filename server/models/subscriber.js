@@ -22,6 +22,10 @@ const subscriberSchema = new mongoose.Schema({
     required: true,
     default: Date.now(),
   },
+  comments: {
+    type: [String],
+    required: false,
+  },
 });
 
 module.exports = mongoose.model("Subscriber", subscriberSchema);
